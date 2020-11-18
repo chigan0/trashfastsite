@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Выбор</title>
+	{%load static%}
+	
+	<link rel="shortcut icon" href="https://image.flaticon.com/icons/png/512/37/37506.png" type="image/x-icon">
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+	></script>
+	<link rel="stylesheet" type="text/css" href="{%static 'css/bootstrap.min.css'%}">
+	<link rel="stylesheet" type="text/css" href="{%static 'css/s.css'%}">
+</head>
+<body>
+	
+
+	 <div class="welcome-page">
+	  <div class="corner"></div>
+	  <div class="corner"></div>
+	  <div class="corner"></div>
+	  <div class="corner"></div>
+	  <div class="contenty">
+	    <p data-shadow="WELCOME"><span>W</span><span>E</span><span>L</span><span>C</span><span>O</span><span>M</span><span>E</span></p>
+	  </div>
+	  <div class="right-vert-line"></div>
+	  <div class="left-vert-line"></div>
+	  <div class="continue">Перейти</div>
+	</div>
+	
+		<header id="green" style="display: none;">
+		<div class="container d-flex justify-content-center">
+			<div class="row categories">
+				<div class="col-12" id="cata">
+				<button class="but" id="bolt" onclick="dauni()">Наши Даные</button>
+				<button class="but" id="all" onclick="tes('Все')">Все</button>
+				</div>
+			</div>
+		</div>
+
+	</header>
+
+
+	
+
+
+	
+	
+	<div class="containerd" id="red" >
+	  <div class="icons">
+	  	<div type="button" class="icon fb" id="btn1" onclick="render()">PS3</div>
+	    <div type="button" class="icon git" id='btn1' onclick="render()">PS4</div>
+	  </div>
+	</div>
+
+
+	<section>
+		<div class="container justify-content-center">
+	  
+		  <div class="content"> 
+		    <div class="card-panel">
+		      <div class="justify-content-center card-panel-content row no-gutters" id="games">
+		     {%for i in games%}
+		    	 <div class="col-lg-4.5 card-container ">
+						<div class="card">
+					  	<img class="card-header-image" data-src='' src=/images/{{i.game_img}}>
+					  	</img>
+					  	<div class="heading">
+					    	{{i.game}}
+					  	</div>
+						</div>
+					</div>
+				{%endfor%}
+		      </div> 
+		    </div> 
+		  </div>
+		</div>
+	</section>
+	
+	<div id="map">
+	</div>	
+
+<script type="text/javascript">
+	$("#games").hide()
+	function render(){
+
+		var box2=document.getElementById("red");
+		var box1=document.getElementById("green");
+			
+		(box1.style.display=="none") ? box1.style.display="block" : box1.style.display="none";
+		(box2.style.display=="none") ? box2.style.display="block" : box2.style.display="none";		
+			
+		$("#games").show()
+		
+		$.getJSON('get_cate/',(requests)=>{
+			requests.forEach((elem)=>{
+		//here genereted buttons with categories
+		console.log(elem['cate_name'])
+				$('#cata').append(`
+					<button 
+						class="but" 
+						id=`+elem['cate_name']+`
+						onclick=tes(`+elem['cate_name']+`)>
+						`+elem['cate_name']+`
+					</button>`
+				)
+			})
+		})
+}
+	function tes(str){
+		$("#games").show()
+
+		let res = (typeof str == 'string') ? str : str.id
+		document.title=res
+
+		$.getJSON('cate/get/'+res+'/',(requests)=>{
+			$('#games').empty();
+			$('#map').empty();
+			requests.forEach((res)=>{
+				console.log(res) 
+				$('#games').append(`
+				<div class="col-lg-4.5 card-container ">
+					<div class="card">
+					  <img class="card-header-image" data-src='' src="/images/`+res['game_img']+`">
+					  </img>
+					  <div class="heading">
+					    `+res['game']+`
+					  </div>
+					</div>
+				</div>
+				`
+			)
+		})
+	})
+}
+
+	function dauni(){
+		document.title='Наши даные'
+		$('#games').empty();
+		$('#map').empty();
+
+		$('#map').append(`
+			
+			<div class="container justify-content-center" >
+			<div class="row justify-content-center">
+				<div class="col-8.5">
+				<div class="contact" id="cnt" style="
+				width: 800px;
+				height: 500px;
+				background: black;
+				" id="cnt">
+					<div class="cont" style="color: white; margin-left: 256px; font-family: 'Montserrat', sans-serif; padding-top: 50px;">
+						<p style="margin-bottom: -17px;
+							margin-left: 38px;">
+							<a href="tel::+77776907855" style="text-decoration: none; color: white;">WhatsApp: +77776907855</a>
+						</p> <br>
+							<a href="tel::+77052842040" style="text-decoration: none; color: white;" >Контактный номер: +77052842040</a> <br>
+							<iframe style="width: 500px;
+			height: 250px;
+			margin-top: 52px;
+			margin-left: -108px;
+			" src="https://yandex.ru/map-widget/v1/?um=constructor%3A031dc0e1587a602de1a6de8dea2d3c24ceb475bf704a1c1d5318dcf3bee2194d&amp;source=constructor" width="634" height="490" frameborder="0"></iframe>	
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>`)
+		
+	return true
+}
+
+</script>
+
+</body>
+</html>
