@@ -12,8 +12,6 @@
 	<link rel="stylesheet" type="text/css" href="{%static 'css/s.css'%}">
 </head>
 <body>
-	
-
 	 <div class="welcome-page">
 	  <div class="corner"></div>
 	  <div class="corner"></div>
@@ -32,23 +30,16 @@
 			<div class="row categories">
 				<div class="col-12" id="cata">
 				<button class="but" id="bolt" onclick="dauni()">Наши Даные</button>
-				<button class="but" id="all" onclick="tes('Все')">Все</button>
 				</div>
 			</div>
 		</div>
 
 	</header>
 
-
-	
-
-
-	
-	
 	<div class="containerd" id="red" >
 	  <div class="icons">
-	  	<div type="button" class="icon fb" id="btn1" onclick="render()">PS3</div>
-	    <div type="button" class="icon git" id='btn1' onclick="render()">PS4</div>
+	  	<div type="button" class="icon fb" id="btn1" onclick="validation('PS3')">PS3</div>
+	    <div type="button" class="icon git" id='btn1' onclick="validation('PS4')">PS4</div>
 	  </div>
 	</div>
 
@@ -81,38 +72,49 @@
 
 <script type="text/javascript">
 	$("#games").hide()
-	function render(){
 
-		var box2=document.getElementById("red");
-		var box1=document.getElementById("green");
-			
-		(box1.style.display=="none") ? box1.style.display="block" : box1.style.display="none";
-		(box2.style.display=="none") ? box2.style.display="block" : box2.style.display="none";		
-			
+	function validation(console_name){//chech console name
+		$.getJSON('check/console/'+console_name,(requests)=>{
+			(requests['status'] == true) ? render(console_name) :false
+		})
+	}
+
+	function render(cons){
+		//rem = "tes('Все','"+cons+"')"
+		$('#cata').append(`<button class="but" id="all" onclick="tes('Все','`+cons+`')">Все</button>`)
+
+		let box2 = document.getElementById("red")
+		let box1 = document.getElementById("green")
+
+		box1.style.display=="none" ? box1.style.display="block" : box1.style.display="none";
+		box2.style.display=="none" ? box2.style.display="block" : box2.style.display="none";	
+		
 		$("#games").show()
 		
-		$.getJSON('get_cate/',(requests)=>{
+		$.getJSON('get_cate/'+cons,(requests)=>{
 			requests.forEach((elem)=>{
 		//here genereted buttons with categories
-		console.log(elem['cate_name'])
+		console.log(cons)
 				$('#cata').append(`
 					<button 
 						class="but" 
 						id=`+elem['cate_name']+`
-						onclick=tes(`+elem['cate_name']+`)>
+						onclick="tes('`+elem['cate_name']+`','`+cons+`')">
 						`+elem['cate_name']+`
 					</button>`
 				)
 			})
 		})
 }
-	function tes(str){
+	function tes(str,conan){
+		console.log(conan)
+		
 		$("#games").show()
 
 		let res = (typeof str == 'string') ? str : str.id
 		document.title=res
 
-		$.getJSON('cate/get/'+res+'/',(requests)=>{
+		$.getJSON('cate/get/?console='+conan+'&cate='+res+'',(requests)=>{
 			$('#games').empty();
 			$('#map').empty();
 			requests.forEach((res)=>{

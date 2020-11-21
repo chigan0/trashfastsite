@@ -22,8 +22,9 @@ from trash_modul.views import *
 urlpatterns = [
 	path('',test),
 	path('uebaka/', admin.site.urls),
-	path('get_cate/',get_cate),
-	path('cate/get/<str:resu>/',game_cate),
+	path('get_cate/<str:cons>',get_cate),
+	path('cate/get/',game_cate),
+    path('check/console/<str:chec>',check_console)
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

@@ -12,7 +12,7 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Games)
 class GamesAdmin(admin.ModelAdmin):
 	exclude=['datetime']
-	list_display = ('game','cate_id','datetime','get_img')
+	list_display = ('game','cate_id','console','get_img','datetime')
 	list_filter = ('cate_id', 'game')
 
 	def get_img(self,obj):
@@ -20,4 +20,9 @@ class GamesAdmin(admin.ModelAdmin):
 
 @admin.register(Visits)
 class VisitsAdmin(admin.ModelAdmin):
-	pass
+	list_display = ('ip','views')
+
+@admin.register(ConsoleName)
+class ConsoleNameAdmin(admin.ModelAdmin):
+	exclude = ['datetime']
+	list_display = ('name','datetime')
